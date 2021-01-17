@@ -65,11 +65,25 @@ function getConfig(request) {
     .setHelpText('(Optional) If date range is applied in the report, the corresponding column to apply the filtering conditions.');
 
   config.newTextInput()
-    .setId('rowLimit')
-    .setName('Row Limit')
-    .setHelpText('Maximum number of rows to fetch in each query. Default is 1000. If set to -1, all rows will be fetched.')
-    .setPlaceholder('1000')
+    .setId('add_start_days')
+    .setName('START_DAYS to add')
+    .setHelpText('Number of days to add to the first day of the date range.')
+    .setPlaceholder('0')
     .setAllowOverride(true);
+
+  config.newTextInput()
+      .setId('add_end_days')
+      .setName('END_DAYS to add')
+      .setHelpText('Number of days to add to the last day of the date range.')
+      .setPlaceholder('0')
+      .setAllowOverride(true);
+
+  config.newTextInput()
+      .setId('rowLimit')
+      .setName('Row Limit')
+      .setHelpText('Maximum number of rows to fetch in each query. Default is 1000. If set to -1, all rows will be fetched.')
+      .setPlaceholder('1000')
+      .setAllowOverride(true);
 
   config.setDateRangeRequired(true);
 
@@ -117,6 +131,18 @@ function validateConfig(configParams) {
     var rowLimit = parseInt(configParams.rowLimit);
     if (isNaN(rowLimit)) {
       throwUserError('Invalid Row Limit.');
+    }
+  }
+  if (configParams.add_start_days) {
+    var add_start_days = parseInt(configParams.add_start_days);
+    if (isNaN(add_start_days)) {
+      throwUserError('Invalid add_start_days.');
+    }
+  }
+  if (configParams.add_end_days) {
+    var add_end_days = parseInt(configParams.add_end_days);
+    if (isNaN(add_end_days)) {
+      throwUserError('Invalid add_end_days.');
     }
   }
 }

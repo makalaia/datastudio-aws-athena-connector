@@ -23,8 +23,11 @@ function generateAthenaQuery(request, fields) {
 
   var query = 'SELECT ' + columns.join(', ') + ' FROM "' + table + '"';
   if (params.dateRangeColumn) {
+    var default_add_days = 0;
     var startDate = request.dateRange.startDate;
     var endDate = request.dateRange.endDate;
+    var add_start_days = parseInt(params.add_start_days || default_add_days);
+    var add_end_days = parseInt(params.add_end_days || default_add_days);
 
     // startDate and endDate are always STRING
     // But in Athena query we need a correct data type
@@ -48,8 +51,8 @@ function generateAthenaQuery(request, fields) {
     // BETWEEN ${dateRangeDataType} '${startDate}'
     // AND ${dateRangeDataType} '${endDate}'
     query += ' WHERE "' + params.dateRangeColumn + '"' +
-      ' BETWEEN ' + dateRangeDataType + ' \'' + startDate + '\'' +
-      ' AND ' + dateRangeDataType + ' \'' + endDate + '\'' ;
+      ' BETWEEN ' + dateRangeDataType + ' \'' + startDate + '\'' + '+ interval \'' + add_start_days + '\' day' +
+      ' AND ' + dateRangeDataType + ' \'' + endDate + '\'' + '+ interval \'' + add_end_days + '\' day';
   }
   if (rowLimit !== -1) {
     query += ' LIMIT ' + rowLimit;
