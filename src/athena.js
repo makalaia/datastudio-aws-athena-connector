@@ -164,6 +164,9 @@ function getAthenaQueryResults(region, queryExecutionId) {
  * @returns {Array} Array of rows with the data type transformed.
  */
 function queryResultsToRows(schema, queryResults) {
+  var cc = DataStudioApp.createCommunityConnector();
+  var types = cc.FieldType
+
   return queryResults.map(function (data) {
     var values = [];
     schema.forEach(function (field) {
@@ -177,6 +180,9 @@ function queryResultsToRows(schema, queryResults) {
           values.push(value.toLowerCase() === 'true');
           break;
         default:
+          if (field.semantics.semanticType == types.YEAR_MONTH_DAY || field.semantics.semanticType == types.YEAR_MONTH_DAY_HOUR){
+            value = value.replace(/\D/g,'');
+          }
           values.push(value);
           break;
       }
